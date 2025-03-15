@@ -90,3 +90,7 @@ This script is provided as-is without any warranty. Feel free to modify and use 
 This script utilizes `yt-dlp` and `ffmpeg`, which are powerful tools for media downloading and processing. For more information, refer to their respective documentation.
 
 *The image was generated with [the mistral chatbot](https://chat.mistral.ai/)*
+
+## Disclaimer
+
+This script is intended for testing and educational purposes only. It is important to respect intellectual property rights and the terms of service of the platforms from which you are downloading content. Please ensure that you have the necessary permissions to download and use any media files.
