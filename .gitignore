@@ -1,0 +1,8 @@
+*
+!LICENSE
+!README.md
+!.gitignore
+!dl.sh
+!media/
+!media/illu.jpg 
+!shell.nix
