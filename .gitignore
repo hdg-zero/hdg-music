@@ -6,3 +6,5 @@
 !media/
 !media/illu.jpg 
 !shell.nix
+!scripts/
+!scripts/* 
