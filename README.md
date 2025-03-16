@@ -81,6 +81,14 @@ nix-shell
 
 - If you experience issues during the download process, check the `download.log` file for error messages and additional information.
 
+## Additional Tools
+
+Additional tools are available in the scripts/ folder, listed below. Each of these scripts has its documentation provided in the same folder.
+
+- merge.sh: merges folders that start in the same way
+- merge-subfolders.sh: merges subfolders that have the same name
+
+
 ## License
 
 This script is provided as-is without any warranty. Feel free to modify and use it according to your needs.
