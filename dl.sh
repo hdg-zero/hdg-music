@@ -3,27 +3,27 @@
 set -e  # Exit immediately if a command exits with a non-zero status
 
 echo "
-          _____                _____                    _____                    _____          
-         /\    \              |\    \                  /\    \                  /\    \         
-        /::\____\             |:\____\                /::\    \                /::\    \        
-       /::::|   |             |::|   |               /::::\    \              /::::\    \       
-      /:::::|   |             |::|   |              /::::::\    \            /::::::\    \      
-     /::::::|   |             |::|   |             /:::/\:::\    \          /:::/\:::\    \     
-    /:::/|::|   |             |::|   |            /:::/  \:::\    \        /:::/__\:::\    \    
-   /:::/ |::|   |             |::|   |           /:::/    \:::\    \       \:::\   \:::\    \   
-  /:::/  |::|___|______       |::|___|______    /:::/    / \:::\    \    ___\:::\   \:::\    \  
- /:::/   |::::::::\    \      /::::::::\    \  /:::/    /   \:::\ ___\  /\   \:::\   \:::\    \ 
-/:::/    |:::::::::\____\    /::::::::::\____\/:::/____/     \:::|    |/::\   \:::\   \:::\____\\
-\::/    / ~~~~~/:::/    /   /:::/~~~~/~~/____/\:::\    \     /:::|____|\:::\   \:::\   \::/    /
- \/____/      /:::/    /   /:::/    /          \:::\    \   /:::/    /  \:::\   \:::\   \/____/ 
-             /:::/    /   /:::/    /            \:::\    \ /:::/    /    \:::\   \:::\    \     
-            /:::/    /   /:::/    /              \:::\    /:::/    /      \:::\   \:::\____\    
-           /:::/    /    \::/    /                \:::\  /:::/    /        \:::\  /:::/    /    
-          /:::/    /      \/____/                  \:::\/:::/    /          \:::\/:::/    /     
-         /:::/    /                                 \::::::/    /            \::::::/    /      
-        /:::/    /                                   \::::/    /              \::::/    /       
-        \::/    /                                     \::/____/                \::/    /        
-         \/____/                                       ~~                       \/____/         
+          _____                 _____                     _____                     _____          
+         /\    \               |\    \                   /\    \                   /\    \         
+        /::\____\              |:\____\                 /::\    \                 /::\    \        
+       /::::|   |              |::|   |                /::::\    \               /::::\    \       
+      /:::::|   |              |::|   |               /::::::\    \             /::::::\    \      
+     /::::::|   |              |::|   |              /:::/\:::\    \           /:::/\:::\    \     
+    /:::/|::|   |              |::|   |             /:::/  \:::\    \         /:::/__\:::\    \    
+   /:::/ |::|   |              |::|   |            /:::/    \:::\    \        \:::\   \:::\    \   
+  /:::/  |::|___|______        |::|___|______     /:::/    / \:::\    \     ___\:::\   \:::\    \  
+ /:::/   |::::::::\    \       /::::::::\    \   /:::/    /   \:::\ ___\   /\   \:::\   \:::\    \ 
+/:::/    |:::::::::\____\     /::::::::::\____\ /:::/____/     \:::|    | /::\   \:::\   \:::\____\\
+\::/    / ~~~~~/:::/    /    /:::/~~~~/~~/____/ \:::\    \     /:::|____| \:::\   \:::\   \::/    /
+ \/____/      /:::/    /    /:::/    /           \:::\    \   /:::/    /   \:::\   \:::\   \/____/ 
+             /:::/    /    /:::/    /             \:::\    \ /:::/    /     \:::\   \:::\    \     
+            /:::/    /    /:::/    /               \:::\    /:::/    /       \:::\   \:::\____\    
+           /:::/    /     \::/    /                 \:::\  /:::/    /         \:::\  /:::/    /    
+          /:::/    /       \/____/                   \:::\/:::/    /           \:::\/:::/    /     
+         /:::/    /                                   \::::::/    /             \::::::/    /      
+        /:::/    /                                     \::::/    /               \::::/    /       
+        \::/    /                                       \::/____/                 \::/    /        
+         \/____/                                         ~~                        \/____/         
 Music Youtube Downloader Script
 Script is starting... Logs will be recorded in download.log
 "
@@ -53,7 +53,7 @@ create_base_directory() {
 # Function to download and process each URL
 process_url() {
     local url="$1"
-    local output_path="$BASE_DIR/%(uploader)s/%(album)s/%(playlist_index)02d - %(title)s.%(ext)s"
+    local output_path="$BASE_DIR/%(artist)s/%(album)s/%(playlist_index)02d - %(title)s.%(ext)s"
 
     if [[ -f "${output_path//\%/}" ]]; then
         log "File already exists: ${output_path//\%/}"
@@ -61,7 +61,7 @@ process_url() {
     fi
 
     yt-dlp -f bestaudio --quiet --extract-audio --audio-format mp3 --audio-quality 0 --embed-thumbnail \
-           --add-metadata --parse-metadata "playlist_index:%(track_number)s" --concurrent-fragments 4 \
+           --add-metadata --parse-metadata "playlist_index:%(track_number)s" --concurrent-fragments 10 \
            --convert-thumbnails jpg --ppa "ffmpeg: -c:v mjpeg -vf crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\"" \
            --output "$output_path" "$url" && log "Downloaded: $url"
 }
@@ -75,7 +75,7 @@ rename_artist_folders() {
 
         parent_dir=$(dirname "$dir")
         base_name=$(basename "$dir")
-        upper_name=$(echo "$base_name" | tr "[:lower:]" "[:upper:]")
+        upper_name=$(echo "$base_name" | sed 'y/éèêëàáâäçùúûüîïôö/eeeeaaaacuuuuiioo/' | tr "[:lower:]" "[:upper:]")
 
        if [[ -d "$dir" ]]; then
             if [[ ! -d "$parent_dir/$upper_name" ]]; then
@@ -99,12 +99,23 @@ main() {
         exit 1
     fi
 
+    MAX_PROCESSES=12
+    CURRENT_PROCESSES=0
+
     while IFS= read -r url || [[ -n "$url" ]]; do
         if [[ -n "$url" ]]; then
             log "Processing URL: $url"
-            process_url "$url"
+            process_url "$url" &
+            CURRENT_PROCESSES=$((CURRENT_PROCESSES + 1))
+
+            if [[ $CURRENT_PROCESSES -ge $MAX_PROCESSES ]]; then
+                wait -n
+                CURRENT_PROCESSES=$((CURRENT_PROCESSES - 1))
+            fi
         fi
     done < "$URL_FILE"
+
+    wait
 
     rename_artist_folders
     log "Download process completed."
