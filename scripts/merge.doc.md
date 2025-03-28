@@ -1,8 +1,8 @@
-# merge-folder.sh Documentation
+# merge.sh Documentation
 
 ## Overview
 
-`merge-folder.sh` is a Bash script that merges the contents of directories that start with a specified prefix into a target directory. After successfully copying the contents, it deletes the original directories.
+`merge.sh` is a Bash script that merges the contents of directories that start with a specified prefix into a target directory. After successfully copying the contents, it deletes the original directories.
 
 ## Features
 
@@ -21,9 +21,9 @@
 ### Script Creation
 
 1. Open a terminal.
-2. Create a new file named `merge-folder.sh`:
+2. Create a new file named `merge.sh`:
    ```bash
-   nano merge-folder.sh
+   nano merge.sh
    ```
 3. Copy the script code into the file.
 4. Save and exit the editor.
@@ -32,14 +32,14 @@
 
 Run the following command to make the script executable:
 ```bash
-chmod +x merge-folder.sh
+chmod +x merge.sh
 ```
 
 ### Running the Script
 
 To execute the script, use the following command format:
 ```bash
-./merge-folder.sh <directory> <prefix>
+./merge.sh <directory> <prefix>
 ```
 
 - `<directory>`: The path to the directory where the search for folders will be performed.
@@ -49,7 +49,7 @@ To execute the script, use the following command format:
 
 To merge all folders starting with "ART" in the directory `/path/to/directory`, run:
 ```bash
-./merge-folder.sh /path/to/directory ART
+./merge.sh /path/to/directory ART
 ```
 
 ## Script Logic
